@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT SOOKHE NASHE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease-in-out;
+        }
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .option-btn.correct {
+            background-color: #22c55e; /* green-500 */
+            color: white;
+            border-color: #16a34a; /* green-600 */
+        }
+        .option-btn.incorrect {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            border-color: #dc2626; /* red-600 */
+        }
+        .hidden {
+            display: none;
+        }
+        select, input[type="number"] {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-2xl mx-auto">
+        <!-- Setup Screen -->
+        <div id="setup-screen" class="card p-8 md:p-12 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Quiz Setup</h1>
+            <p class="text-gray-600 mb-8">
+                Select a category, number of questions, and the duration for your test.
+            </p>
+            
+            <div class="space-y-6">
+                 <div>
+                    <label for="category-select" class="block text-sm font-medium text-gray-700 mb-2 text-left">Category:</label>
+                    <select id="category-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="all">All Categories</option>
+                        <option value="quantitative">Quantitative Aptitude</option>
+                        <option value="logical">Logical Reasoning</option>
+                        <option value="verbal">Verbal Ability</option>
+                        <option value="technical">Technical</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                         <label for="num-questions" class="block text-sm font-medium text-gray-700 mb-2 text-left">Number of Questions:</label>
+                         <select id="num-questions" class="w-full p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <input type="number" id="custom-num-questions" class="w-full p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition mt-2 hidden" placeholder="Enter number of questions" min="1" max="100">
+                    </div>
+                    <div>
+                         <label for="time-limit" class="block text-sm font-medium text-gray-700 mb-2 text-left">Time Limit:</label>
+                         <select id="time-limit" class="w-full p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            <option value="5">5 minutes</option>
+                            <option value="10">10 minutes</option>
+                            <option value="15" selected>15 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="60">60 minutes</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <input type="number" id="custom-time-limit" class="w-full p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition mt-2 hidden" placeholder="Enter time in minutes" min="1" max="120">
+                    </div>
+                </div>
+            </div>
+
+            <button id="start-btn" class="btn w-full mt-10 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-indigo-700">Start Quiz</button>
+            <p id="setup-error" class="text-red-500 mt-4 h-4"></p>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="card p-8 md:p-12 hidden">
+            <div class="flex justify-between items-center mb-6 text-gray-700">
+                <div id="timer" class="text-lg font-bold bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full">
+                    <span id="time-left"></span>
+                </div>
+                <div class="text-lg font-medium">Question <span id="current-q-num"></span>/<span id="total-q-num"></span></div>
+                <div id="score" class="text-lg font-bold bg-green-100 text-green-800 px-4 py-2 rounded-full">Score: <span id="score-val">0</span></div>
+            </div>
+            <div id="question-container" class="mt-8">
+                <h2 id="question-text" class="text-2xl md:text-3xl font-semibold text-gray-800 mb-8 text-center"></h2>
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Options will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="card p-8 md:p-12 text-center hidden">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Quiz Complete!</h2>
+            <div class="my-8 space-y-4 text-lg">
+                <p class="text-gray-700">You scored <strong id="final-score" class="text-indigo-600 text-xl"></strong> out of <strong id="total-questions-result" class="text-indigo-600 text-xl"></strong>.</p>
+                <p id="percentage" class="text-2xl font-bold"></p>
+                <p class="text-gray-600">Total time taken: <strong id="time-taken" class="text-indigo-600"></strong> seconds.</p>
+            </div>
+            <div id="summary-container" class="text-left mt-8 max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-lg">
+                <h3 class="font-bold text-xl mb-4 text-center">Review Your Answers</h3>
+                <!-- Summary will be generated here -->
+            </div>
+            <button id="restart-btn" class="btn w-full mt-8 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-indigo-700">Take Another Test</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Question Bank ---
+        const questionBank = [
+            // Quantitative Aptitude
+            { question: "The largest 4 digit number exactly divisible by 88 is:", options: ["9944", "9768", "9988", "8888"], correctAnswer: 0, category: "quantitative" },
+            { question: "One pipe can fill a tank three times as fast as another pipe. If together the two pipes can fill the tank in 36 minutes, then the slower pipe alone will be able to fill the tank in:", options: ["81 min.", "108 min.", "144 min.", "192 min."], correctAnswer: 2, category: "quantitative" },
+            { question: "A large tanker can be filled by two pipes A and B in 60 minutes and 40 minutes respectively. How many minutes will it take to fill the tanker from empty state if B is used for half the time and A and B fill it together for the other half?", options: ["15 min", "20 min", "27.5 min", "30 min"], correctAnswer: 3, category: "quantitative" },
+            { question: "The H.C.F. of two numbers is 23 and the other two factors of their L.C.M. are 13 and 14. The larger of the two numbers is:", options: ["276", "299", "322", "345"], correctAnswer: 2, category: "quantitative" },
+            { question: "A train can travel 50% faster than a car. Both start from point A at the same time and reach point B 75 kms away from A at the same time. On the way, however, the train lost about 12.5 minutes while stopping at the stations. The speed of the car is:", options: ["100 kmph", "110 kmph", "120 kmph", "130 kmph"], correctAnswer: 2, category: "quantitative" },
+            { question: "A vendor bought toffees at 6 for a rupee. How many for a rupee must he sell to gain 20%?", options: ["3", "4", "5", "6"], correctAnswer: 2, category: "quantitative" },
+            { question: "A father said to his son, 'I was as old as you are at the present at the time of your birth'. If the father's age is 38 years now, the son's age five years back was:", options: ["14 years", "19 years", "33 years", "38 years"], correctAnswer: 0, category: "quantitative" },
+            { question: "A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?", options: ["120 metres", "180 metres", "324 metres", "150 metres"], correctAnswer: 3, category: "quantitative" },
+            { question: "If a person walks at 14 km/hr instead of 10 km/hr, he would have walked 20 km more. The actual distance travelled by him is:", options: ["50 km", "56 km", "70 km", "80 km"], correctAnswer: 0, category: "quantitative" },
+            { question: "A sum of money at simple interest amounts to Rs. 815 in 3 years and to Rs. 854 in 4 years. The sum is:", options: ["Rs. 650", "Rs. 690", "Rs. 698", "Rs. 700"], correctAnswer: 2, category: "quantitative" },
+            { question: "If f(x) = (x^2 - 50), what is the value of f(-5)?", options: ["75", "25", "0", "-25"], correctAnswer: 1, category: "quantitative" },
+            { question: "A certain number of men take 45 days to complete work. If there are 10 men less, then they will take 60 days to complete the work. Find the original number of men.", options: ["50", "60", "30", "40"], correctAnswer: 3, category: "quantitative" },
+            { question: "A train runs first half of the distance at 40 km/hr and the remaining half at 60 km/hr. What is the average speed for the entire journey?", options: ["50 km/hr", "48 km/hr", "52 km/hr", "55 km/hr"], correctAnswer: 1, category: "quantitative" },
+            { question: "If the radius of a circle is increased by 20%, then the area is increased by:", options: ["44%", "120%", "144%", "40%"], correctAnswer: 0, category: "quantitative" },
+            { question: "A father is three times as old as his son. After fifteen years the father will be twice as old as his son's age at that time. What is the father's present age?", options: ["36", "42", "45", "48"], correctAnswer: 2, category: "quantitative" },
+            { question: "What is 184 times 156?", options: ["28704", "29704", "30604", "27604"], correctAnswer: 0, category: "quantitative" },
+            { question: "The product of two consecutive even numbers is 16128. Which is the larger number?", options: ["132", "128", "124", "126"], correctAnswer: 1, category: "quantitative" },
+            { question: "Cost price of 80 notebooks is equal to the selling price of 65 notebooks. The gain or loss % is:", options: ["32% gain", "23% loss", "23% gain", "27% loss"], correctAnswer: 2, category: "quantitative" },
+            { question: "A milkman mixes 6 liters of free tap water with 20 liters of pure milk (cost Rs.28/liter). What is his profit % if he sells the mixture at the cost price?", options: ["30%", "16.5%", "25%", "20%"], correctAnswer: 0, category: "quantitative" },
+            { question: "In an examination, 52% of the candidates failed in English and 43% failed in Mathematics. If 17% failed in both the subjects, then the percentage of candidates who passed in both subjects was:", options: ["25%", "22%", "23%", "21%"], correctAnswer: 1, category: "quantitative" },
+            { question: "A cricketer played 80 innings and scored an average of 99 runs. His score in the last inning was zero. To have an average of 100 at the end, his score in the last innings should have been:", options: ["60 runs", "80 runs", "10 runs", "1 run"], correctAnswer: 1, category: "quantitative" },
+            { question: "Express a speed of 36 kmph in meters per second?", options: ["10 mps", "12 mps", "14 mps", "17 mps"], correctAnswer: 0, category: "quantitative" },
+            { question: "A can do a piece of work in 4 days. B can do it in 5 days. With the assistance of C they completed the work in 2 days. In how many days can C alone do it?", options: ["10 days", "20 days", "5 days", "4 days"], correctAnswer: 1, category: "quantitative" },
+            { question: "A, B and C can do a piece of work in 24, 30 and 40 days respectively. They start the work together but C leaves 4 days before the completion of the work. In how many days is the work done?", options: ["15 days", "14 days", "13 days", "11 days"], correctAnswer: 3, category: "quantitative" },
+            { question: "What number has a 5:1 ratio to the number 10?", options: ["42", "50", "55", "62"], correctAnswer: 1, category: "quantitative" },
+            { question: "A is 30% more efficient than B. How much time will they, working together, take to complete a job which A alone could have done in 23 days?", options: ["11 days", "13 days", "20 days", "15 days"], correctAnswer: 1, category: "quantitative" },
+
+            // Logical Reasoning
+            { question: "Which is the one that does not belong to the group?", options: ["Chess", "Badminton", "Cricket", "Volleyball"], correctAnswer: 0, category: "logical" },
+            { question: "Which is the one that does not belong to the group?", options: ["Win", "Compete", "Triumph", "Victory"], correctAnswer: 1, category: "logical" },
+            { question: "Which is the one that does not belong to the group?", options: ["Jackal", "Horse", "Cat", "Dog"], correctAnswer: 1, category: "logical" },
+            { question: "Which is the one that does not belong to the group?", options: ["Avoid", "Obstruct", "Block", "Hamper"], correctAnswer: 0, category: "logical" },
+            { question: "Which is the one that does not belong to the group?", options: ["Sparrow", "Parrot", "Swan", "Koel"], correctAnswer: 2, category: "logical" },
+            { question: "In a class of 20 students, Shreya is 5th from the top and Annie is 7 ranks below Shreya. Find Annie's rank from the bottom.", options: ["3", "5", "6", "9"], correctAnswer: 3, category: "logical" },
+            { question: "Judge: Court:: Doctor:?", options: ["Municipality", "Hospital", "Tehsil", "Factory"], correctAnswer: 1, category: "logical" },
+            { question: "Carbon dioxide: Extinguish:: Oxygen:?", options: ["Foam", "Explode", "Burn", "Isolate"], correctAnswer: 2, category: "logical" },
+            { question: "Kitten: Cat:: Cub:?", options: ["Tiger", "Dear", "Giraffe", "Horse"], correctAnswer: 0, category: "logical" },
+            { question: "Den: lion:: stable: ?", options: ["Cat", "Dog", "Horse", "Cow"], correctAnswer: 2, category: "logical" },
+            { question: "Thermometer: Temperature:: Barometer:?", options: ["Stress", "Pressure", "Strain", "Force"], correctAnswer: 1, category: "logical" },
+            { question: "A man is facing west. He turns 45 degrees in the clockwise direction, then another 180 degrees in the same direction, and then 270 degrees in the anticlockwise direction. Which direction is he facing now?", options: ["South", "North-West", "West", "South-West"], correctAnswer: 3, category: "logical" },
+            { question: "A man said to a lady, 'Your mother's husband's sister is my aunt'. How is the lady related to the man?", options: ["Daughter", "Grand daughter", "Mother", "Sister"], correctAnswer: 3, category: "logical" },
+            { question: "If South-East is called East, and North-West is called West, and so on, what will North be called?", options: ["East", "North-West", "North-East", "West"], correctAnswer: 1, category: "logical" },
+            { question: "A man traveled 10km in the south direction, turns left and traveled 4km, turns left & traveled 4km, now turns right and travels 4km & stops. What is the shortest distance b/w start and end position?", options: ["8 km", "10 km", "12 km", "8.16 km"], correctAnswer: 1, category: "logical" },
+            { question: "Pointing to a man, Sinha says, 'he is the brother of my uncle's daughter'. How is Sinha related to the man?", options: ["Brother", "Brother-in-law", "Cousin", "Nephew"], correctAnswer: 2, category: "logical" },
+            
+            // Verbal Ability
+            { question: "Out of 7 consonants and 4 vowels, how many words of 3 consonants and 2 vowels can be formed?", options: ["210", "1050", "25200", "21400"], correctAnswer: 2, category: "verbal" },
+            { question: "Complete the sentence: 'She has great love and affection ___ her grandmother.'", options: ["for", "from", "with", "to"], correctAnswer: 0, category: "verbal" },
+            { question: "Choose the nearest meaning for 'obsolete': '25 paise coins are fast becoming obsolete.'", options: ["smaller", "older", "rare", "outdated"], correctAnswer: 3, category: "verbal" },
+            { question: "I am writing to enquire ___ the possibility of hiring a conference room.", options: ["of", "about", "into", "after"], correctAnswer: 1, category: "verbal" },
+            { question: "What is the meaning of 'surpassed' in the sentence: 'Geeta passed her exam and surpassed her parents' dream'?", options: ["fulfill", "meet", "exceed", "realize"], correctAnswer: 2, category: "verbal" },
+            { question: "I saw him ___ the airport.", options: ["in", "on", "at", "by"], correctAnswer: 2, category: "verbal" },
+            { question: "___ man you see is my father.", options: ["A", "An", "The", "This"], correctAnswer: 2, category: "verbal" },
+            { question: "___ university of its status does not require any advertisement.", options: ["A", "An", "The", "Some"], correctAnswer: 0, category: "verbal" },
+            { question: "This train travels from London ___ Paris.", options: ["at", "to", "over", "below"], correctAnswer: 1, category: "verbal" },
+            { question: "The antidote to these problems is hard to find. ('antidote' means)", options: ["Cause for", "Result of", "Remedy for", "Consequence of"], correctAnswer: 2, category: "verbal" },
+            { question: "The article is written in a very lucid style. ('lucid' means)", options: ["Elaborate", "Clear", "Intricate", "Noble"], correctAnswer: 1, category: "verbal" },
+            { question: "The jacket is impervious to water. ('impervious' means)", options: ["Dirty", "Pure", "Impenetrable", "Favorable"], correctAnswer: 2, category: "verbal" },
+            { question: "Find the error: 'A good employee (1)/ is one which (2)/ is always willing (3)/ to go the extra mile. (4)'", options: ["(1)", "(2)", "(3)", "(4)"], correctAnswer: 1, category: "verbal" },
+            { question: "Fill in the blanks: 'I ______ a friend named Raj who ______ a horse ranch in the city.'", options: ["has, buys", "need, holds", "possess, runs", "have, owns"], correctAnswer: 3, category: "verbal" },
+            { question: "He brought him ______ with great difficulty.", options: ["about", "in", "up", "over"], correctAnswer: 2, category: "verbal" },
+            { question: "What is the antonym of VITUPERATE?", options: ["abuse", "rebuke", "praise", "retort"], correctAnswer: 2, category: "verbal" },
+            { question: "What does 'CONVIVIAL' mean?", options: ["prodigal", "serious", "disloyal", "friendly"], correctAnswer: 3, category: "verbal" },
+            
+            // Technical
+            { question: "Which of the following statements is false regarding C?", options: ["Pointers store memory addresses", "Arrays are passed by value to functions", "Both of the above are false", "Both of the above are true"], correctAnswer: 1, category: "technical" },
+            { question: "What is true regarding static variables in C?", options: ["Only local variables can be static", "Only global variables can be static", "Both local and global variables can be static", "Static variables can't be used in C"], correctAnswer: 2, category: "technical" },
+            { question: "Which of these allows objects of different types to be considered as examples of a higher-level set?", options: ["Generalization", "Polymorphism", "Encapsulation", "Inheritance"], correctAnswer: 0, category: "technical" },
+            { question: "What is the primary characteristic of a key field in a database?", options: ["It must be an integer", "It must be unique", "It must be indexed", "It must not be null"], correctAnswer: 1, category: "technical" },
+            { question: "In C++, if a member initializer is not provided for a member object of a class, the object's ___ is called.", options: ["static function", "non-static function", "default constructor", "destructor"], correctAnswer: 2, category: "technical" },
+            { question: "Which concept allows an object belonging to a different class to respond to the same message in different ways?", options: ["Late binding", "Dynamic binding", "Virtual functions", "All of the above"], correctAnswer: 3, category: "technical" },
+            { question: "Which function is NOT defined in string.h?", options: ["strtod", "memchr", "strspn", "strchr"], correctAnswer: 0, category: "technical" },
+            { question: "A device that is connected to the motherboard is called a...", options: ["external device", "adjunct device", "peripheral device", "ribbon cable"], correctAnswer: 2, category: "technical" },
+            { question: "The first computers were programmed using...", options: ["assembly language", "machine language", "spaghetti code", "source code"], correctAnswer: 1, category: "technical" },
+            { question: "Which of these would NOT fit a microprocessor's description?", options: ["Electronic computer", "Central Processing Unit", "Memory disk", "A single integrated chip circuit"], correctAnswer: 2, category: "technical" },
+            { question: "By using DLLs, Windows primarily:", options: ["Saves processing time", "Multitasks", "Shares program code", "Communicates with PC's hardware"], correctAnswer: 2, category: "technical" },
+            { question: "A device that provides emergency power to your computer, conditions the voltage, and protects against power surges is called a...", options: ["PSU", "USP", "UPPS", "UPS"], correctAnswer: 3, category: "technical" }
+        ];
+
+        // DOM Elements
+        const setupScreen = document.getElementById('setup-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+
+        const categorySelect = document.getElementById('category-select');
+        const numQuestionsInput = document.getElementById('num-questions');
+        const timeLimitInput = document.getElementById('time-limit');
+        const customNumQuestionsInput = document.getElementById('custom-num-questions');
+        const customTimeLimitInput = document.getElementById('custom-time-limit');
+        const startBtn = document.getElementById('start-btn');
+        const setupError = document.getElementById('setup-error');
+
+        const timeLeftEl = document.getElementById('time-left');
+        const currentQNumEl = document.getElementById('current-q-num');
+        const totalQNumEl = document.getElementById('total-q-num');
+        const scoreValEl = document.getElementById('score-val');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+
+        const finalScoreEl = document.getElementById('final-score');
+        const totalQuestionsResultEl = document.getElementById('total-questions-result');
+        const percentageEl = document.getElementById('percentage');
+        const timeTakenEl = document.getElementById('time-taken');
+        const summaryContainer = document.getElementById('summary-container');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Quiz State
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft;
+        let totalTime;
+        let userAnswers = [];
+
+        // --- Functions ---
+        
+        /**
+         * Updates the category dropdown to show question counts.
+         */
+        function updateCategoryCounts() {
+            const counts = {
+                quantitative: 0,
+                logical: 0,
+                verbal: 0,
+                technical: 0
+            };
+            questionBank.forEach(q => {
+                if (counts.hasOwnProperty(q.category)) {
+                    counts[q.category]++;
+                }
+            });
+
+            document.querySelector('#category-select option[value="all"]').textContent = `All Categories (${questionBank.length} questions)`;
+            document.querySelector('#category-select option[value="quantitative"]').textContent = `Quantitative Aptitude (${counts.quantitative} questions)`;
+            document.querySelector('#category-select option[value="logical"]').textContent = `Logical Reasoning (${counts.logical} questions)`;
+            document.querySelector('#category-select option[value="verbal"]').textContent = `Verbal Ability (${counts.verbal} questions)`;
+            document.querySelector('#category-select option[value="technical"]').textContent = `Technical (${counts.technical} questions)`;
+        }
+
+        /**
+         * Starts the quiz based on user selections.
+         */
+        function startQuiz() {
+            const category = categorySelect.value;
+
+            let numQuestionsValue = numQuestionsInput.value;
+            if (numQuestionsValue === 'custom') {
+                numQuestionsValue = parseInt(customNumQuestionsInput.value);
+                if (isNaN(numQuestionsValue) || numQuestionsValue < 1 || numQuestionsValue > 100) {
+                    setupError.textContent = 'Please enter a valid number of questions (1-100).';
+                    return;
+                }
+            } else {
+                numQuestionsValue = parseInt(numQuestionsValue);
+            }
+
+            let timeInMinutesValue = timeLimitInput.value;
+            if (timeInMinutesValue === 'custom') {
+                timeInMinutesValue = parseInt(customTimeLimitInput.value);
+                if (isNaN(timeInMinutesValue) || timeInMinutesValue < 1 || timeInMinutesValue > 120) {
+                    setupError.textContent = 'Please enter a valid time limit in minutes (1-120).';
+                    return;
+                }
+            } else {
+                timeInMinutesValue = parseInt(timeInMinutesValue);
+            }
+
+            let filteredQuestions = questionBank;
+            if (category !== 'all') {
+                filteredQuestions = questionBank.filter(q => q.category === category);
+            }
+
+            if (numQuestionsValue > filteredQuestions.length) {
+                setupError.textContent = `Only ${filteredQuestions.length} questions available in this category.`;
+                return;
+            }
+
+            // Shuffle and slice the questions
+            questions = filteredQuestions.sort(() => 0.5 - Math.random()).slice(0, numQuestionsValue);
+
+            setupError.textContent = "";
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            scoreValEl.textContent = 0;
+
+            totalTime = timeInMinutesValue * 60;
+            timeLeft = totalTime;
+
+            setupScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            displayQuestion();
+            startTimer();
+        }
+        
+        /**
+         * Displays the current question and its options.
+         */
+        function displayQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionTextEl.textContent = currentQuestion.question;
+            optionsContainer.innerHTML = '';
+            
+            currentQNumEl.textContent = currentQuestionIndex + 1;
+            totalQNumEl.textContent = questions.length;
+
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-btn', 'btn', 'w-full', 'p-4', 'border-2', 'rounded-lg', 'text-left', 'text-gray-700', 'bg-white', 'hover:bg-gray-100', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-indigo-500');
+                button.dataset.index = index;
+                button.onclick = selectAnswer;
+                optionsContainer.appendChild(button);
+            });
+        }
+        
+        /**
+         * Starts the countdown timer.
+         */
+        function startTimer() {
+            updateTimerDisplay();
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endQuiz(true); // End quiz due to time up
+                }
+            }, 1000);
+        }
+
+        /**
+         * Updates the timer display in MM:SS format.
+         */
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeLeftEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        /**
+         * Handles the user selecting an answer.
+         * @param {Event} e The click event from the option button.
+         */
+        function selectAnswer(e) {
+            const selectedButton = e.target;
+            const selectedIndex = parseInt(selectedButton.dataset.index);
+            const correctIndex = questions[currentQuestionIndex].correctAnswer;
+
+            userAnswers[currentQuestionIndex] = selectedIndex;
+
+            // Disable all buttons after selection
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                scoreValEl.textContent = score;
+                selectedButton.classList.add('correct');
+            } else {
+                selectedButton.classList.add('incorrect');
+                // Highlight the correct answer
+                optionButtons.forEach(btn => {
+                    if (parseInt(btn.dataset.index) === correctIndex) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    displayQuestion();
+                } else {
+                    endQuiz(false); // End quiz normally
+                }
+            }, 1200);
+        }
+
+        /**
+         * Ends the quiz and displays the results screen.
+         * @param {boolean} timeUp Indicates if the quiz ended because time ran out.
+         */
+        function endQuiz(timeUp) {
+            clearInterval(timer);
+            
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            const timeTaken = totalTime - timeLeft;
+            finalScoreEl.textContent = score;
+            totalQuestionsResultEl.textContent = questions.length;
+            timeTakenEl.textContent = timeUp ? totalTime : timeTaken;
+
+            const percentage = questions.length > 0 ? Math.round((score / questions.length) * 100) : 0;
+            percentageEl.textContent = `Accuracy: ${percentage}%`;
+            if (percentage >= 80) {
+                percentageEl.style.color = '#16a34a'; // green-600
+            } else if (percentage >= 50) {
+                percentageEl.style.color = '#ca8a04'; // yellow-500
+            } else {
+                percentageEl.style.color = '#dc2626'; // red-600
+            }
+            
+            generateSummary();
+        }
+
+        /**
+         * Generates and displays a summary of the user's answers.
+         */
+        function generateSummary() {
+            summaryContainer.innerHTML = '<h3 class="font-bold text-xl mb-4 text-center">Review Your Answers</h3>';
+            questions.forEach((q, index) => {
+                const userAnswerIndex = userAnswers[index];
+                const isCorrect = userAnswerIndex === q.correctAnswer;
+
+                const summaryItem = document.createElement('div');
+                summaryItem.classList.add('mb-6', 'p-3', 'rounded-lg');
+                summaryItem.style.border = `2px solid ${isCorrect ? '#22c55e' : '#ef4444'}`;
+
+                let html = `<p class="font-semibold mb-2">${index + 1}. ${q.question}</p>`;
+                html += '<ul class="list-disc list-inside space-y-1">';
+
+                q.options.forEach((opt, optIndex) => {
+                    let liClass = "text-gray-600";
+                    let indicator = "";
+
+                    if (optIndex === q.correctAnswer) {
+                        liClass = "font-bold text-green-700";
+                        indicator = " (Correct Answer)";
+                    }
+                    if (optIndex === userAnswerIndex && !isCorrect) {
+                        liClass = "text-red-700 line-through";
+                        indicator = " (Your Answer)";
+                    } else if (optIndex === userAnswerIndex && isCorrect) {
+                        indicator = " (Your Answer)";
+                    }
+                    
+                    html += `<li class="${liClass}">${opt}${indicator}</li>`;
+                });
+                
+                html += '</ul>';
+                summaryItem.innerHTML = html;
+                 
+                // AI Solution Section
+                const correctAnswerText = q.options[q.correctAnswer];
+                const aiSection = document.createElement('div');
+                aiSection.classList.add('mt-4');
+                aiSection.innerHTML = `
+                    <button 
+                        class="show-solution-btn text-sm text-indigo-600 hover:text-indigo-800 font-semibold py-1"
+                        data-question="${q.question}"
+                        data-options='${JSON.stringify(q.options)}'
+                        data-correct-answer="${correctAnswerText}"
+                    >
+                        Show AI Explanation
+                    </button>
+                    <div class="ai-solution-container mt-2 p-3 bg-indigo-50 rounded-lg text-gray-700 text-sm hidden">
+                        <!-- AI solution will be loaded here -->
+                    </div>
+                `;
+                summaryItem.appendChild(aiSection);
+                summaryContainer.appendChild(summaryItem);
+            });
+        }
+        
+        /**
+         * Resets the quiz to the setup screen.
+         */
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            setupScreen.classList.remove('hidden');
+        }
+
+        /**
+         * Fetches an AI-generated explanation for a quiz question.
+         */
+        async function getAiSolution(question, options, correctAnswerText) {
+            const apiKey = "AIzaSyCUmlg3DiEjwi7I5Wjt3iMNlBgJtFTQCPw"; // This will be provided by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const userQuery = `Question: "${question}"\nOptions: ${options.join(', ')}\nThe correct answer is "${correctAnswerText}".\nPlease provide a concise explanation for why this is the correct answer.`;
+            const systemPrompt = "You are a helpful quiz assistant. Your role is to provide clear and concise explanations for the correct answers to quiz questions.";
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            let response;
+            let retries = 3;
+            let delay = 1000;
+
+            for (let i = 0; i < retries; i++) {
+                try {
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (text) return text;
+                        throw new Error('Invalid response structure from API');
+                    } else if (response.status === 429) { // Throttling
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2; // Exponential backoff
+                    } else {
+                        throw new Error(`API request failed with status ${response.status}`);
+                    }
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2;
+                }
+            }
+            throw new Error('Failed to get a response from the AI model after several retries.');
+        }
+
+        /**
+         * Handles the click event for the "Show AI Explanation" button.
+         */
+        async function handleShowSolutionClick(event) {
+            const button = event.target;
+            const solutionContainer = button.nextElementSibling;
+
+            button.textContent = "Generating...";
+            button.disabled = true;
+
+            try {
+                const { question, options, correctAnswer } = button.dataset;
+                const parsedOptions = JSON.parse(options.replace(/'/g, '"'));
+                const explanation = await getAiSolution(question, parsedOptions, correctAnswer);
+                // Simple formatting for the response
+                solutionContainer.innerHTML = explanation
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')       // Italics
+                    .replace(/\n/g, '<br>');                      // Newlines
+                solutionContainer.classList.remove('hidden');
+                button.classList.add('hidden');
+            } catch (error) {
+                console.error("Error fetching AI solution:", error);
+                solutionContainer.textContent = "Sorry, couldn't generate an explanation at this time.";
+                solutionContainer.classList.remove('hidden');
+                button.textContent = "Retry Explanation";
+                button.disabled = false;
+            }
+        }
+
+        // --- Event Listeners ---
+        numQuestionsInput.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customNumQuestionsInput.classList.remove('hidden');
+            } else {
+                customNumQuestionsInput.classList.add('hidden');
+            }
+        });
+
+        timeLimitInput.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customTimeLimitInput.classList.remove('hidden');
+            } else {
+                customTimeLimitInput.classList.add('hidden');
+            }
+        });
+
+        startBtn.addEventListener('click', startQuiz);
+        restartBtn.addEventListener('click', restartQuiz);
+        summaryContainer.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('show-solution-btn')) {
+                handleShowSolutionClick(event);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateCategoryCounts);
+
+    </script>
+</body>
+</html>
