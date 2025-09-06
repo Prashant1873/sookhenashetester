@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROJECT SOOKHE NASHE</title>
+    <title>Interactive Quiz Maker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -69,6 +69,16 @@
                         <option value="technical">Technical</option>
                     </select>
                 </div>
+
+                <div>
+                    <label for="difficulty-select" class="block text-sm font-medium text-gray-700 mb-2 text-left">Difficulty:</label>
+                    <select id="difficulty-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="all">All Difficulties</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
                 
                 <div class="grid grid-cols-2 gap-6">
                     <div>
@@ -80,7 +90,7 @@
                             <option value="50">50</option>
                             <option value="custom">Custom</option>
                         </select>
-                        <input type="number" id="custom-num-questions" class="w-full p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition mt-2 hidden" placeholder="Enter number of questions" min="1" max="100">
+                        <input type="number" id="custom-num-questions" class="hidden w-full mt-2 p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" min="1" max="100" placeholder="Enter number of questions">
                     </div>
                     <div>
                          <label for="time-limit" class="block text-sm font-medium text-gray-700 mb-2 text-left">Time Limit:</label>
@@ -92,7 +102,7 @@
                             <option value="60">60 minutes</option>
                             <option value="custom">Custom</option>
                         </select>
-                        <input type="number" id="custom-time-limit" class="w-full p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition mt-2 hidden" placeholder="Enter time in minutes" min="1" max="120">
+                        <input type="number" id="custom-time-limit" class="hidden w-full mt-2 p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" min="1" max="300" placeholder="Enter time in minutes">
                     </div>
                 </div>
             </div>
@@ -138,83 +148,83 @@
         // --- Question Bank ---
         const questionBank = [
             // Quantitative Aptitude
-            { question: "The largest 4 digit number exactly divisible by 88 is:", options: ["9944", "9768", "9988", "8888"], correctAnswer: 0, category: "quantitative" },
-            { question: "One pipe can fill a tank three times as fast as another pipe. If together the two pipes can fill the tank in 36 minutes, then the slower pipe alone will be able to fill the tank in:", options: ["81 min.", "108 min.", "144 min.", "192 min."], correctAnswer: 2, category: "quantitative" },
-            { question: "A large tanker can be filled by two pipes A and B in 60 minutes and 40 minutes respectively. How many minutes will it take to fill the tanker from empty state if B is used for half the time and A and B fill it together for the other half?", options: ["15 min", "20 min", "27.5 min", "30 min"], correctAnswer: 3, category: "quantitative" },
-            { question: "The H.C.F. of two numbers is 23 and the other two factors of their L.C.M. are 13 and 14. The larger of the two numbers is:", options: ["276", "299", "322", "345"], correctAnswer: 2, category: "quantitative" },
-            { question: "A train can travel 50% faster than a car. Both start from point A at the same time and reach point B 75 kms away from A at the same time. On the way, however, the train lost about 12.5 minutes while stopping at the stations. The speed of the car is:", options: ["100 kmph", "110 kmph", "120 kmph", "130 kmph"], correctAnswer: 2, category: "quantitative" },
-            { question: "A vendor bought toffees at 6 for a rupee. How many for a rupee must he sell to gain 20%?", options: ["3", "4", "5", "6"], correctAnswer: 2, category: "quantitative" },
-            { question: "A father said to his son, 'I was as old as you are at the present at the time of your birth'. If the father's age is 38 years now, the son's age five years back was:", options: ["14 years", "19 years", "33 years", "38 years"], correctAnswer: 0, category: "quantitative" },
-            { question: "A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?", options: ["120 metres", "180 metres", "324 metres", "150 metres"], correctAnswer: 3, category: "quantitative" },
-            { question: "If a person walks at 14 km/hr instead of 10 km/hr, he would have walked 20 km more. The actual distance travelled by him is:", options: ["50 km", "56 km", "70 km", "80 km"], correctAnswer: 0, category: "quantitative" },
-            { question: "A sum of money at simple interest amounts to Rs. 815 in 3 years and to Rs. 854 in 4 years. The sum is:", options: ["Rs. 650", "Rs. 690", "Rs. 698", "Rs. 700"], correctAnswer: 2, category: "quantitative" },
-            { question: "If f(x) = (x^2 - 50), what is the value of f(-5)?", options: ["75", "25", "0", "-25"], correctAnswer: 1, category: "quantitative" },
-            { question: "A certain number of men take 45 days to complete work. If there are 10 men less, then they will take 60 days to complete the work. Find the original number of men.", options: ["50", "60", "30", "40"], correctAnswer: 3, category: "quantitative" },
-            { question: "A train runs first half of the distance at 40 km/hr and the remaining half at 60 km/hr. What is the average speed for the entire journey?", options: ["50 km/hr", "48 km/hr", "52 km/hr", "55 km/hr"], correctAnswer: 1, category: "quantitative" },
-            { question: "If the radius of a circle is increased by 20%, then the area is increased by:", options: ["44%", "120%", "144%", "40%"], correctAnswer: 0, category: "quantitative" },
-            { question: "A father is three times as old as his son. After fifteen years the father will be twice as old as his son's age at that time. What is the father's present age?", options: ["36", "42", "45", "48"], correctAnswer: 2, category: "quantitative" },
-            { question: "What is 184 times 156?", options: ["28704", "29704", "30604", "27604"], correctAnswer: 0, category: "quantitative" },
-            { question: "The product of two consecutive even numbers is 16128. Which is the larger number?", options: ["132", "128", "124", "126"], correctAnswer: 1, category: "quantitative" },
-            { question: "Cost price of 80 notebooks is equal to the selling price of 65 notebooks. The gain or loss % is:", options: ["32% gain", "23% loss", "23% gain", "27% loss"], correctAnswer: 2, category: "quantitative" },
-            { question: "A milkman mixes 6 liters of free tap water with 20 liters of pure milk (cost Rs.28/liter). What is his profit % if he sells the mixture at the cost price?", options: ["30%", "16.5%", "25%", "20%"], correctAnswer: 0, category: "quantitative" },
-            { question: "In an examination, 52% of the candidates failed in English and 43% failed in Mathematics. If 17% failed in both the subjects, then the percentage of candidates who passed in both subjects was:", options: ["25%", "22%", "23%", "21%"], correctAnswer: 1, category: "quantitative" },
-            { question: "A cricketer played 80 innings and scored an average of 99 runs. His score in the last inning was zero. To have an average of 100 at the end, his score in the last innings should have been:", options: ["60 runs", "80 runs", "10 runs", "1 run"], correctAnswer: 1, category: "quantitative" },
-            { question: "Express a speed of 36 kmph in meters per second?", options: ["10 mps", "12 mps", "14 mps", "17 mps"], correctAnswer: 0, category: "quantitative" },
-            { question: "A can do a piece of work in 4 days. B can do it in 5 days. With the assistance of C they completed the work in 2 days. In how many days can C alone do it?", options: ["10 days", "20 days", "5 days", "4 days"], correctAnswer: 1, category: "quantitative" },
-            { question: "A, B and C can do a piece of work in 24, 30 and 40 days respectively. They start the work together but C leaves 4 days before the completion of the work. In how many days is the work done?", options: ["15 days", "14 days", "13 days", "11 days"], correctAnswer: 3, category: "quantitative" },
-            { question: "What number has a 5:1 ratio to the number 10?", options: ["42", "50", "55", "62"], correctAnswer: 1, category: "quantitative" },
-            { question: "A is 30% more efficient than B. How much time will they, working together, take to complete a job which A alone could have done in 23 days?", options: ["11 days", "13 days", "20 days", "15 days"], correctAnswer: 1, category: "quantitative" },
+            { question: "The largest 4 digit number exactly divisible by 88 is:", options: ["9944", "9768", "9988", "8888"], correctAnswer: 0, category: "quantitative", difficulty: "medium" },
+            { question: "One pipe can fill a tank three times as fast as another pipe. If together the two pipes can fill the tank in 36 minutes, then the slower pipe alone will be able to fill the tank in:", options: ["81 min.", "108 min.", "144 min.", "192 min."], correctAnswer: 2, category: "quantitative", difficulty: "medium" },
+            { question: "A large tanker can be filled by two pipes A and B in 60 minutes and 40 minutes respectively. How many minutes will it take to fill the tanker from empty state if B is used for half the time and A and B fill it together for the other half?", options: ["15 min", "20 min", "27.5 min", "30 min"], correctAnswer: 3, category: "quantitative", difficulty: "hard" },
+            { question: "The H.C.F. of two numbers is 23 and the other two factors of their L.C.M. are 13 and 14. The larger of the two numbers is:", options: ["276", "299", "322", "345"], correctAnswer: 2, category: "quantitative", difficulty: "medium" },
+            { question: "A train can travel 50% faster than a car. Both start from point A at the same time and reach point B 75 kms away from A at the same time. On the way, however, the train lost about 12.5 minutes while stopping at the stations. The speed of the car is:", options: ["100 kmph", "110 kmph", "120 kmph", "130 kmph"], correctAnswer: 2, category: "quantitative", difficulty: "hard" },
+            { question: "A vendor bought toffees at 6 for a rupee. How many for a rupee must he sell to gain 20%?", options: ["3", "4", "5", "6"], correctAnswer: 2, category: "quantitative", difficulty: "easy" },
+            { question: "A father said to his son, 'I was as old as you are at the present at the time of your birth'. If the father's age is 38 years now, the son's age five years back was:", options: ["14 years", "19 years", "33 years", "38 years"], correctAnswer: 0, category: "quantitative", difficulty: "easy" },
+            { question: "A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?", options: ["120 metres", "180 metres", "324 metres", "150 metres"], correctAnswer: 3, category: "quantitative", difficulty: "easy" },
+            { question: "If a person walks at 14 km/hr instead of 10 km/hr, he would have walked 20 km more. The actual distance travelled by him is:", options: ["50 km", "56 km", "70 km", "80 km"], correctAnswer: 0, category: "quantitative", difficulty: "easy" },
+            { question: "A sum of money at simple interest amounts to Rs. 815 in 3 years and to Rs. 854 in 4 years. The sum is:", options: ["Rs. 650", "Rs. 690", "Rs. 698", "Rs. 700"], correctAnswer: 2, category: "quantitative", difficulty: "easy" },
+            { question: "If f(x) = (x^2 - 50), what is the value of f(-5)?", options: ["75", "25", "0", "-25"], correctAnswer: 1, category: "quantitative", difficulty: "easy" },
+            { question: "A certain number of men take 45 days to complete work. If there are 10 men less, then they will take 60 days to complete the work. Find the original number of men.", options: ["50", "60", "30", "40"], correctAnswer: 3, category: "quantitative", difficulty: "medium" },
+            { question: "A train runs first half of the distance at 40 km/hr and the remaining half at 60 km/hr. What is the average speed for the entire journey?", options: ["50 km/hr", "48 km/hr", "52 km/hr", "55 km/hr"], correctAnswer: 1, category: "quantitative", difficulty: "medium" },
+            { question: "If the radius of a circle is increased by 20%, then the area is increased by:", options: ["44%", "120%", "144%", "40%"], correctAnswer: 0, category: "quantitative", difficulty: "easy" },
+            { question: "A father is three times as old as his son. After fifteen years the father will be twice as old as his son's age at that time. What is the father's present age?", options: ["36", "42", "45", "48"], correctAnswer: 2, category: "quantitative", difficulty: "medium" },
+            { question: "What is 184 times 156?", options: ["28704", "29704", "30604", "27604"], correctAnswer: 0, category: "quantitative", difficulty: "easy" },
+            { question: "The product of two consecutive even numbers is 16128. Which is the larger number?", options: ["132", "128", "124", "126"], correctAnswer: 1, category: "quantitative", difficulty: "easy" },
+            { question: "Cost price of 80 notebooks is equal to the selling price of 65 notebooks. The gain or loss % is:", options: ["32% gain", "23% loss", "23% gain", "27% loss"], correctAnswer: 2, category: "quantitative", difficulty: "easy" },
+            { question: "A milkman mixes 6 liters of free tap water with 20 liters of pure milk (cost Rs.28/liter). What is his profit % if he sells the mixture at the cost price?", options: ["30%", "16.5%", "25%", "20%"], correctAnswer: 0, category: "quantitative", difficulty: "medium" },
+            { question: "In an examination, 52% of the candidates failed in English and 43% failed in Mathematics. If 17% failed in both the subjects, then the percentage of candidates who passed in both subjects was:", options: ["25%", "22%", "23%", "21%"], correctAnswer: 1, category: "quantitative", difficulty: "medium" },
+            { question: "A cricketer played 80 innings and scored an average of 99 runs. His score in the last inning was zero. To have an average of 100 at the end, his score in the last innings should have been:", options: ["60 runs", "80 runs", "10 runs", "1 run"], correctAnswer: 1, category: "quantitative", difficulty: "easy" },
+            { question: "Express a speed of 36 kmph in meters per second?", options: ["10 mps", "12 mps", "14 mps", "17 mps"], correctAnswer: 0, category: "quantitative", difficulty: "easy" },
+            { question: "A can do a piece of work in 4 days. B can do it in 5 days. With the assistance of C they completed the work in 2 days. In how many days can C alone do it?", options: ["10 days", "20 days", "5 days", "4 days"], correctAnswer: 1, category: "quantitative", difficulty: "medium" },
+            { question: "A, B and C can do a piece of work in 24, 30 and 40 days respectively. They start the work together but C leaves 4 days before the completion of the work. In how many days is the work done?", options: ["15 days", "14 days", "13 days", "11 days"], correctAnswer: 3, category: "quantitative", difficulty: "hard" },
+            { question: "What number has a 5:1 ratio to the number 10?", options: ["42", "50", "55", "62"], correctAnswer: 1, category: "quantitative", difficulty: "easy" },
+            { question: "A is 30% more efficient than B. How much time will they, working together, take to complete a job which A alone could have done in 23 days?", options: ["11 days", "13 days", "20 days", "15 days"], correctAnswer: 1, category: "quantitative", difficulty: "medium" },
 
             // Logical Reasoning
-            { question: "Which is the one that does not belong to the group?", options: ["Chess", "Badminton", "Cricket", "Volleyball"], correctAnswer: 0, category: "logical" },
-            { question: "Which is the one that does not belong to the group?", options: ["Win", "Compete", "Triumph", "Victory"], correctAnswer: 1, category: "logical" },
-            { question: "Which is the one that does not belong to the group?", options: ["Jackal", "Horse", "Cat", "Dog"], correctAnswer: 1, category: "logical" },
-            { question: "Which is the one that does not belong to the group?", options: ["Avoid", "Obstruct", "Block", "Hamper"], correctAnswer: 0, category: "logical" },
-            { question: "Which is the one that does not belong to the group?", options: ["Sparrow", "Parrot", "Swan", "Koel"], correctAnswer: 2, category: "logical" },
-            { question: "In a class of 20 students, Shreya is 5th from the top and Annie is 7 ranks below Shreya. Find Annie's rank from the bottom.", options: ["3", "5", "6", "9"], correctAnswer: 3, category: "logical" },
-            { question: "Judge: Court:: Doctor:?", options: ["Municipality", "Hospital", "Tehsil", "Factory"], correctAnswer: 1, category: "logical" },
-            { question: "Carbon dioxide: Extinguish:: Oxygen:?", options: ["Foam", "Explode", "Burn", "Isolate"], correctAnswer: 2, category: "logical" },
-            { question: "Kitten: Cat:: Cub:?", options: ["Tiger", "Dear", "Giraffe", "Horse"], correctAnswer: 0, category: "logical" },
-            { question: "Den: lion:: stable: ?", options: ["Cat", "Dog", "Horse", "Cow"], correctAnswer: 2, category: "logical" },
-            { question: "Thermometer: Temperature:: Barometer:?", options: ["Stress", "Pressure", "Strain", "Force"], correctAnswer: 1, category: "logical" },
-            { question: "A man is facing west. He turns 45 degrees in the clockwise direction, then another 180 degrees in the same direction, and then 270 degrees in the anticlockwise direction. Which direction is he facing now?", options: ["South", "North-West", "West", "South-West"], correctAnswer: 3, category: "logical" },
-            { question: "A man said to a lady, 'Your mother's husband's sister is my aunt'. How is the lady related to the man?", options: ["Daughter", "Grand daughter", "Mother", "Sister"], correctAnswer: 3, category: "logical" },
-            { question: "If South-East is called East, and North-West is called West, and so on, what will North be called?", options: ["East", "North-West", "North-East", "West"], correctAnswer: 1, category: "logical" },
-            { question: "A man traveled 10km in the south direction, turns left and traveled 4km, turns left & traveled 4km, now turns right and travels 4km & stops. What is the shortest distance b/w start and end position?", options: ["8 km", "10 km", "12 km", "8.16 km"], correctAnswer: 1, category: "logical" },
-            { question: "Pointing to a man, Sinha says, 'he is the brother of my uncle's daughter'. How is Sinha related to the man?", options: ["Brother", "Brother-in-law", "Cousin", "Nephew"], correctAnswer: 2, category: "logical" },
+            { question: "Which is the one that does not belong to the group?", options: ["Chess", "Badminton", "Cricket", "Volleyball"], correctAnswer: 0, category: "logical", difficulty: "easy" },
+            { question: "Which is the one that does not belong to the group?", options: ["Win", "Compete", "Triumph", "Victory"], correctAnswer: 1, category: "logical", difficulty: "medium" },
+            { question: "Which is the one that does not belong to the group?", options: ["Jackal", "Horse", "Cat", "Dog"], correctAnswer: 1, category: "logical", difficulty: "easy" },
+            { question: "Which is the one that does not belong to the group?", options: ["Avoid", "Obstruct", "Block", "Hamper"], correctAnswer: 0, category: "logical", difficulty: "medium" },
+            { question: "Which is the one that does not belong to the group?", options: ["Sparrow", "Parrot", "Swan", "Koel"], correctAnswer: 2, category: "logical", difficulty: "easy" },
+            { question: "In a class of 20 students, Shreya is 5th from the top and Annie is 7 ranks below Shreya. Find Annie's rank from the bottom.", options: ["3", "5", "6", "9"], correctAnswer: 3, category: "logical", difficulty: "easy" },
+            { question: "Judge: Court:: Doctor:?", options: ["Municipality", "Hospital", "Tehsil", "Factory"], correctAnswer: 1, category: "logical", difficulty: "easy" },
+            { question: "Carbon dioxide: Extinguish:: Oxygen:?", options: ["Foam", "Explode", "Burn", "Isolate"], correctAnswer: 2, category: "logical", difficulty: "medium" },
+            { question: "Kitten: Cat:: Cub:?", options: ["Tiger", "Dear", "Giraffe", "Horse"], correctAnswer: 0, category: "logical", difficulty: "easy" },
+            { question: "Den: lion:: stable: ?", options: ["Cat", "Dog", "Horse", "Cow"], correctAnswer: 2, category: "logical", difficulty: "easy" },
+            { question: "Thermometer: Temperature:: Barometer:?", options: ["Stress", "Pressure", "Strain", "Force"], correctAnswer: 1, category: "logical", difficulty: "easy" },
+            { question: "A man is facing west. He turns 45 degrees in the clockwise direction, then another 180 degrees in the same direction, and then 270 degrees in the anticlockwise direction. Which direction is he facing now?", options: ["South", "North-West", "West", "South-West"], correctAnswer: 3, category: "logical", difficulty: "hard" },
+            { question: "A man said to a lady, 'Your mother's husband's sister is my aunt'. How is the lady related to the man?", options: ["Daughter", "Grand daughter", "Mother", "Sister"], correctAnswer: 3, category: "logical", difficulty: "medium" },
+            { question: "If South-East is called East, and North-West is called West, and so on, what will North be called?", options: ["East", "North-West", "North-East", "West"], correctAnswer: 1, category: "logical", difficulty: "hard" },
+            { question: "A man traveled 10km in the south direction, turns left and traveled 4km, turns left & traveled 4km, now turns right and travels 4km & stops. What is the shortest distance b/w start and end position?", options: ["8 km", "10 km", "12 km", "8.16 km"], correctAnswer: 1, category: "logical", difficulty: "medium" },
+            { question: "Pointing to a man, Sinha says, 'he is the brother of my uncle's daughter'. How is Sinha related to the man?", options: ["Brother", "Brother-in-law", "Cousin", "Nephew"], correctAnswer: 2, category: "logical", difficulty: "easy" },
             
             // Verbal Ability
-            { question: "Out of 7 consonants and 4 vowels, how many words of 3 consonants and 2 vowels can be formed?", options: ["210", "1050", "25200", "21400"], correctAnswer: 2, category: "verbal" },
-            { question: "Complete the sentence: 'She has great love and affection ___ her grandmother.'", options: ["for", "from", "with", "to"], correctAnswer: 0, category: "verbal" },
-            { question: "Choose the nearest meaning for 'obsolete': '25 paise coins are fast becoming obsolete.'", options: ["smaller", "older", "rare", "outdated"], correctAnswer: 3, category: "verbal" },
-            { question: "I am writing to enquire ___ the possibility of hiring a conference room.", options: ["of", "about", "into", "after"], correctAnswer: 1, category: "verbal" },
-            { question: "What is the meaning of 'surpassed' in the sentence: 'Geeta passed her exam and surpassed her parents' dream'?", options: ["fulfill", "meet", "exceed", "realize"], correctAnswer: 2, category: "verbal" },
-            { question: "I saw him ___ the airport.", options: ["in", "on", "at", "by"], correctAnswer: 2, category: "verbal" },
-            { question: "___ man you see is my father.", options: ["A", "An", "The", "This"], correctAnswer: 2, category: "verbal" },
-            { question: "___ university of its status does not require any advertisement.", options: ["A", "An", "The", "Some"], correctAnswer: 0, category: "verbal" },
-            { question: "This train travels from London ___ Paris.", options: ["at", "to", "over", "below"], correctAnswer: 1, category: "verbal" },
-            { question: "The antidote to these problems is hard to find. ('antidote' means)", options: ["Cause for", "Result of", "Remedy for", "Consequence of"], correctAnswer: 2, category: "verbal" },
-            { question: "The article is written in a very lucid style. ('lucid' means)", options: ["Elaborate", "Clear", "Intricate", "Noble"], correctAnswer: 1, category: "verbal" },
-            { question: "The jacket is impervious to water. ('impervious' means)", options: ["Dirty", "Pure", "Impenetrable", "Favorable"], correctAnswer: 2, category: "verbal" },
-            { question: "Find the error: 'A good employee (1)/ is one which (2)/ is always willing (3)/ to go the extra mile. (4)'", options: ["(1)", "(2)", "(3)", "(4)"], correctAnswer: 1, category: "verbal" },
-            { question: "Fill in the blanks: 'I ______ a friend named Raj who ______ a horse ranch in the city.'", options: ["has, buys", "need, holds", "possess, runs", "have, owns"], correctAnswer: 3, category: "verbal" },
-            { question: "He brought him ______ with great difficulty.", options: ["about", "in", "up", "over"], correctAnswer: 2, category: "verbal" },
-            { question: "What is the antonym of VITUPERATE?", options: ["abuse", "rebuke", "praise", "retort"], correctAnswer: 2, category: "verbal" },
-            { question: "What does 'CONVIVIAL' mean?", options: ["prodigal", "serious", "disloyal", "friendly"], correctAnswer: 3, category: "verbal" },
+            { question: "Out of 7 consonants and 4 vowels, how many words of 3 consonants and 2 vowels can be formed?", options: ["210", "1050", "25200", "21400"], correctAnswer: 2, category: "verbal", difficulty: "medium" },
+            { question: "Complete the sentence: 'She has great love and affection ___ her grandmother.'", options: ["for", "from", "with", "to"], correctAnswer: 0, category: "verbal", difficulty: "easy" },
+            { question: "Choose the nearest meaning for 'obsolete': '25 paise coins are fast becoming obsolete.'", options: ["smaller", "older", "rare", "outdated"], correctAnswer: 3, category: "verbal", difficulty: "easy" },
+            { question: "I am writing to enquire ___ the possibility of hiring a conference room.", options: ["of", "about", "into", "after"], correctAnswer: 1, category: "verbal", difficulty: "easy" },
+            { question: "What is the meaning of 'surpassed' in the sentence: 'Geeta passed her exam and surpassed her parents' dream'?", options: ["fulfill", "meet", "exceed", "realize"], correctAnswer: 2, category: "verbal", difficulty: "easy" },
+            { question: "I saw him ___ the airport.", options: ["in", "on", "at", "by"], correctAnswer: 2, category: "verbal", difficulty: "easy" },
+            { question: "___ man you see is my father.", options: ["A", "An", "The", "This"], correctAnswer: 2, category: "verbal", difficulty: "easy" },
+            { question: "___ university of its status does not require any advertisement.", options: ["A", "An", "The", "Some"], correctAnswer: 0, category: "verbal", difficulty: "easy" },
+            { question: "This train travels from London ___ Paris.", options: ["at", "to", "over", "below"], correctAnswer: 1, category: "verbal", difficulty: "easy" },
+            { question: "The antidote to these problems is hard to find. ('antidote' means)", options: ["Cause for", "Result of", "Remedy for", "Consequence of"], correctAnswer: 2, category: "verbal", difficulty: "easy" },
+            { question: "The article is written in a very lucid style. ('lucid' means)", options: ["Elaborate", "Clear", "Intricate", "Noble"], correctAnswer: 1, category: "verbal", difficulty: "easy" },
+            { question: "The jacket is impervious to water. ('impervious' means)", options: ["Dirty", "Pure", "Impenetrable", "Favorable"], correctAnswer: 2, category: "verbal", difficulty: "easy" },
+            { question: "Find the error: 'A good employee (1)/ is one which (2)/ is always willing (3)/ to go the extra mile. (4)'", options: ["(1)", "(2)", "(3)", "(4)"], correctAnswer: 1, category: "verbal", difficulty: "medium" },
+            { question: "Fill in the blanks: 'I ______ a friend named Raj who ______ a horse ranch in the city.'", options: ["has, buys", "need, holds", "possess, runs", "have, owns"], correctAnswer: 3, category: "verbal", difficulty: "easy" },
+            { question: "He brought him ______ with great difficulty.", options: ["about", "in", "up", "over"], correctAnswer: 2, category: "verbal", difficulty: "easy" },
+            { question: "What is the antonym of VITUPERATE?", options: ["abuse", "rebuke", "praise", "retort"], correctAnswer: 2, category: "verbal", difficulty: "easy" },
+            { question: "What does 'CONVIVIAL' mean?", options: ["prodigal", "serious", "disloyal", "friendly"], correctAnswer: 3, category: "verbal", difficulty: "easy" },
             
             // Technical
-            { question: "Which of the following statements is false regarding C?", options: ["Pointers store memory addresses", "Arrays are passed by value to functions", "Both of the above are false", "Both of the above are true"], correctAnswer: 1, category: "technical" },
-            { question: "What is true regarding static variables in C?", options: ["Only local variables can be static", "Only global variables can be static", "Both local and global variables can be static", "Static variables can't be used in C"], correctAnswer: 2, category: "technical" },
-            { question: "Which of these allows objects of different types to be considered as examples of a higher-level set?", options: ["Generalization", "Polymorphism", "Encapsulation", "Inheritance"], correctAnswer: 0, category: "technical" },
-            { question: "What is the primary characteristic of a key field in a database?", options: ["It must be an integer", "It must be unique", "It must be indexed", "It must not be null"], correctAnswer: 1, category: "technical" },
-            { question: "In C++, if a member initializer is not provided for a member object of a class, the object's ___ is called.", options: ["static function", "non-static function", "default constructor", "destructor"], correctAnswer: 2, category: "technical" },
-            { question: "Which concept allows an object belonging to a different class to respond to the same message in different ways?", options: ["Late binding", "Dynamic binding", "Virtual functions", "All of the above"], correctAnswer: 3, category: "technical" },
-            { question: "Which function is NOT defined in string.h?", options: ["strtod", "memchr", "strspn", "strchr"], correctAnswer: 0, category: "technical" },
-            { question: "A device that is connected to the motherboard is called a...", options: ["external device", "adjunct device", "peripheral device", "ribbon cable"], correctAnswer: 2, category: "technical" },
-            { question: "The first computers were programmed using...", options: ["assembly language", "machine language", "spaghetti code", "source code"], correctAnswer: 1, category: "technical" },
-            { question: "Which of these would NOT fit a microprocessor's description?", options: ["Electronic computer", "Central Processing Unit", "Memory disk", "A single integrated chip circuit"], correctAnswer: 2, category: "technical" },
-            { question: "By using DLLs, Windows primarily:", options: ["Saves processing time", "Multitasks", "Shares program code", "Communicates with PC's hardware"], correctAnswer: 2, category: "technical" },
-            { question: "A device that provides emergency power to your computer, conditions the voltage, and protects against power surges is called a...", options: ["PSU", "USP", "UPPS", "UPS"], correctAnswer: 3, category: "technical" }
+            { question: "Which of the following statements is false regarding C?", options: ["Pointers store memory addresses", "Arrays are passed by value to functions", "Both of the above are false", "Both of the above are true"], correctAnswer: 1, category: "technical", difficulty: "medium" },
+            { question: "What is true regarding static variables in C?", options: ["Only local variables can be static", "Only global variables can be static", "Both local and global variables can be static", "Static variables can't be used in C"], correctAnswer: 2, category: "technical", difficulty: "easy" },
+            { question: "Which of these allows objects of different types to be considered as examples of a higher-level set?", options: ["Generalization", "Polymorphism", "Encapsulation", "Inheritance"], correctAnswer: 0, category: "technical", difficulty: "easy" },
+            { question: "What is the primary characteristic of a key field in a database?", options: ["It must be an integer", "It must be unique", "It must be indexed", "It must not be null"], correctAnswer: 1, category: "technical", difficulty: "easy" },
+            { question: "In C++, if a member initializer is not provided for a member object of a class, the object's ___ is called.", options: ["static function", "non-static function", "default constructor", "destructor"], correctAnswer: 2, category: "technical", difficulty: "medium" },
+            { question: "Which concept allows an object belonging to a different class to respond to the same message in different ways?", options: ["Late binding", "Dynamic binding", "Virtual functions", "All of the above"], correctAnswer: 3, category: "technical", difficulty: "easy" },
+            { question: "Which function is NOT defined in string.h?", options: ["strtod", "memchr", "strspn", "strchr"], correctAnswer: 0, category: "technical", difficulty: "medium" },
+            { question: "A device that is connected to the motherboard is called a...", options: ["external device", "adjunct device", "peripheral device", "ribbon cable"], correctAnswer: 2, category: "technical", difficulty: "easy" },
+            { question: "The first computers were programmed using...", options: ["assembly language", "machine language", "spaghetti code", "source code"], correctAnswer: 1, category: "technical", difficulty: "easy" },
+            { question: "Which of these would NOT fit a microprocessor's description?", options: ["Electronic computer", "Central Processing Unit", "Memory disk", "A single integrated chip circuit"], correctAnswer: 2, category: "technical", difficulty: "easy" },
+            { question: "By using DLLs, Windows primarily:", options: ["Saves processing time", "Multitasks", "Shares program code", "Communicates with PC's hardware"], correctAnswer: 2, category: "technical", difficulty: "easy" },
+            { question: "A device that provides emergency power to your computer, conditions the voltage, and protects against power surges is called a...", options: ["PSU", "USP", "UPPS", "UPS"], correctAnswer: 3, category: "technical", difficulty: "easy" }
         ];
 
         // DOM Elements
@@ -223,6 +233,7 @@
         const resultsScreen = document.getElementById('results-screen');
 
         const categorySelect = document.getElementById('category-select');
+        const difficultySelect = document.getElementById('difficulty-select');
         const numQuestionsInput = document.getElementById('num-questions');
         const timeLimitInput = document.getElementById('time-limit');
         const customNumQuestionsInput = document.getElementById('custom-num-questions');
@@ -283,41 +294,45 @@
          */
         function startQuiz() {
             const category = categorySelect.value;
+            const difficulty = difficultySelect.value;
 
-            let numQuestionsValue = numQuestionsInput.value;
-            if (numQuestionsValue === 'custom') {
-                numQuestionsValue = parseInt(customNumQuestionsInput.value);
-                if (isNaN(numQuestionsValue) || numQuestionsValue < 1 || numQuestionsValue > 100) {
-                    setupError.textContent = 'Please enter a valid number of questions (1-100).';
+            let numQuestions;
+            if (numQuestionsInput.value === 'custom') {
+                numQuestions = parseInt(customNumQuestionsInput.value);
+                if (!customNumQuestionsInput.value || isNaN(numQuestions) || numQuestions < 1 || numQuestions > 100) {
+                    setupError.textContent = "Please enter a valid number of questions (1-100).";
                     return;
                 }
             } else {
-                numQuestionsValue = parseInt(numQuestionsValue);
+                numQuestions = parseInt(numQuestionsInput.value);
             }
 
-            let timeInMinutesValue = timeLimitInput.value;
-            if (timeInMinutesValue === 'custom') {
-                timeInMinutesValue = parseInt(customTimeLimitInput.value);
-                if (isNaN(timeInMinutesValue) || timeInMinutesValue < 1 || timeInMinutesValue > 120) {
-                    setupError.textContent = 'Please enter a valid time limit in minutes (1-120).';
+            let timeInMinutes;
+            if (timeLimitInput.value === 'custom') {
+                timeInMinutes = parseInt(customTimeLimitInput.value);
+                if (!customTimeLimitInput.value || isNaN(timeInMinutes) || timeInMinutes < 1 || timeInMinutes > 300) {
+                    setupError.textContent = "Please enter a valid time limit (1-300 minutes).";
                     return;
                 }
             } else {
-                timeInMinutesValue = parseInt(timeInMinutesValue);
+                timeInMinutes = parseInt(timeLimitInput.value);
             }
 
             let filteredQuestions = questionBank;
             if (category !== 'all') {
                 filteredQuestions = questionBank.filter(q => q.category === category);
             }
+            if (difficulty !== 'all') {
+                filteredQuestions = filteredQuestions.filter(q => q.difficulty === difficulty);
+            }
 
-            if (numQuestionsValue > filteredQuestions.length) {
-                setupError.textContent = `Only ${filteredQuestions.length} questions available in this category.`;
+            if (numQuestions > filteredQuestions.length) {
+                setupError.textContent = `Only ${filteredQuestions.length} questions available for the selected filters.`;
                 return;
             }
 
             // Shuffle and slice the questions
-            questions = filteredQuestions.sort(() => 0.5 - Math.random()).slice(0, numQuestionsValue);
+            questions = filteredQuestions.sort(() => 0.5 - Math.random()).slice(0, numQuestions);
 
             setupError.textContent = "";
             currentQuestionIndex = 0;
@@ -325,7 +340,7 @@
             userAnswers = [];
             scoreValEl.textContent = 0;
 
-            totalTime = timeInMinutesValue * 60;
+            totalTime = timeInMinutes * 60;
             timeLeft = totalTime;
 
             setupScreen.classList.add('hidden');
@@ -343,9 +358,28 @@
             const currentQuestion = questions[currentQuestionIndex];
             questionTextEl.textContent = currentQuestion.question;
             optionsContainer.innerHTML = '';
-            
+
             currentQNumEl.textContent = currentQuestionIndex + 1;
             totalQNumEl.textContent = questions.length;
+
+            // Clear previous difficulty marker
+            const existingDifficulty = currentQNumEl.parentNode.querySelector('.difficulty-marker');
+            if (existingDifficulty) {
+                existingDifficulty.remove();
+            }
+
+            // Add difficulty marker as a colored pill
+            const difficultyEl = document.createElement('span');
+            difficultyEl.textContent = currentQuestion.difficulty.charAt(0).toUpperCase() + currentQuestion.difficulty.slice(1);
+            difficultyEl.classList.add('difficulty-marker', 'inline-block', 'px-2', 'py-1', 'text-xs', 'font-semibold', 'rounded-full', 'ml-2', 'text-white');
+            if (currentQuestion.difficulty === 'easy') {
+                difficultyEl.classList.add('bg-green-500');
+            } else if (currentQuestion.difficulty === 'medium') {
+                difficultyEl.classList.add('bg-yellow-500');
+            } else {
+                difficultyEl.classList.add('bg-red-500');
+            }
+            currentQNumEl.parentNode.appendChild(difficultyEl);
 
             currentQuestion.options.forEach((option, index) => {
                 const button = document.createElement('button');
@@ -519,7 +553,7 @@
          * Fetches an AI-generated explanation for a quiz question.
          */
         async function getAiSolution(question, options, correctAnswerText) {
-            const apiKey = "AIzaSyCUmlg3DiEjwi7I5Wjt3iMNlBgJtFTQCPw"; // This will be provided by the environment
+            const apiKey = ""; // This will be provided by the environment
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
             const userQuery = `Question: "${question}"\nOptions: ${options.join(', ')}\nThe correct answer is "${correctAnswerText}".\nPlease provide a concise explanation for why this is the correct answer.`;
@@ -593,6 +627,14 @@
         }
 
         // --- Event Listeners ---
+        startBtn.addEventListener('click', startQuiz);
+        restartBtn.addEventListener('click', restartQuiz);
+        summaryContainer.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('show-solution-btn')) {
+                handleShowSolutionClick(event);
+            }
+        });
+
         numQuestionsInput.addEventListener('change', function() {
             if (this.value === 'custom') {
                 customNumQuestionsInput.classList.remove('hidden');
@@ -606,14 +648,6 @@
                 customTimeLimitInput.classList.remove('hidden');
             } else {
                 customTimeLimitInput.classList.add('hidden');
-            }
-        });
-
-        startBtn.addEventListener('click', startQuiz);
-        restartBtn.addEventListener('click', restartQuiz);
-        summaryContainer.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('show-solution-btn')) {
-                handleShowSolutionClick(event);
             }
         });
 
